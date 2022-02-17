@@ -1,3 +1,6 @@
+// Crodits for servo logic in this file goes to
+// philisson: https://github.com/philsson
+
 #include "servos.h"
 #include <Adafruit_PWMServoDriver.h>
 #include <cmath>
@@ -38,6 +41,12 @@ void resetDriver() {
 
 void setAngle(int i, float angle) {
     driver.writeMicroseconds(i, angle2time(angle));
+}
+
+void resetAngles() {
+    for (size_t i = 0; i < 12; ++i) {
+        setAngle(i, 0);
+    }
 }
 
 } // namespace servos
