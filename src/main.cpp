@@ -3,6 +3,8 @@
 #include "testprograms.h"
 #include "walkcycle.h"
 
+#include <cmath>
+
 void setup() {
     servos::resetDriver();
     servos::resetAngles();
@@ -18,9 +20,16 @@ void loop() {
         tests::program1();
         break;
     case 1:
-        auto &control = Control::instance();
-        cycle.turnAmount(control.x);
-        cycle.walkAmount(control.y);
+        auto demoControls = false;
+        if (demoControls) {
+            cycle.walkAmount(1);
+            cycle.turnAmount(std::sin(phase / 5.));
+        }
+        else {
+            auto &control = Control::instance();
+            cycle.turnAmount(control.x);
+            cycle.walkAmount(control.y);
+        }
         phase = cycle.update(phase);
     }
 }
