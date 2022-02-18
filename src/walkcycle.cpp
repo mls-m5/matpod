@@ -1,5 +1,6 @@
 #include "walkcycle.h"
 #include "servos.h"
+#include "utils.h"
 #include <Arduino.h>
 #include <cmath>
 
@@ -39,8 +40,26 @@ float Cycle1::legOffset(int index) {
     return 0;
 }
 
+float Cycle1::legDirectionScale(int index, int side) {
+    auto ret = 0.f;
+
+    ret += _walkAmount;
+
+    if (side) {
+        ret += _turnAmount;
+    }
+    else {
+        ret -= _turnAmount;
+    }
+
+    auto invScale = _walkAmount + _turnAmount;
+    invScale = std::min(1.f, invScale);
+
+    return ret / invScale;
+}
+
 Cycle1::Cycle1() {
-    setOffsetPattern(0);
+    offsetPattern(0);
 }
 
 float Cycle1::update(float phase) {
@@ -48,7 +67,10 @@ float Cycle1::update(float phase) {
 
     for (size_t i = 0; i < 6; ++i) {
         auto leg = legCycle(phase + _phaseOffset.at(i));
-        servos::moveLeg(i % 3, i >= 3, leg.offset(legOffset(i % 3)));
+        auto index = i % 3;
+        auto side = i >= 3;
+        leg.hip *= legDirectionScale(index, side);
+        servos::moveLeg(index, side, leg.offset(legOffset(index)));
     }
 
     usleep(1000 * step);
@@ -56,7 +78,7 @@ float Cycle1::update(float phase) {
     return phase + step;
 }
 
-void Cycle1::setOffsetPattern(int index) {
+void Cycle1::offsetPattern(int index) {
     for (auto &o : _phaseOffset) {
         o = 0;
     }
@@ -77,4 +99,12 @@ void Cycle1::setOffsetPattern(int index) {
             _phaseOffset.at(i + 3) = static_cast<float>(i) / 6.f + 2.f / 3.f;
         }
     }
+}
+
+void Cycle1::walkAmount(float value) {
+    _walkAmount = clamp(value, -1.f, 1.f);
+}
+
+void Cycle1::turnAmount(float value) {
+    _turnAmount = clamp(value, -1.f, 1.f);
 }

@@ -2,6 +2,7 @@
 // philisson: https://github.com/philsson
 
 #include "servos.h"
+#include "utils.h"
 #include <Adafruit_PWMServoDriver.h>
 #include <cmath>
 
@@ -14,12 +15,8 @@ int16_t angle2time(float angle) {
     constexpr float minAngle = -maxAngle;
     constexpr float angleSpan = maxAngle - minAngle;
 
-    // angle = std::clamp(angle, -maxAngle, maxAngle); // when c++17 comes
-    angle = std::max(angle, minAngle);
-    angle = std::min(angle, maxAngle);
+    angle = clamp(angle, -maxAngle, maxAngle);
 
-    // constexpr auto servoMin = 190;
-    // constexpr auto servoMax = 540;
     constexpr int16_t usMin = 600;
     constexpr int16_t usMax = 2400;
     constexpr int16_t usDiff = usMax - usMin;
