@@ -12,22 +12,21 @@ float cycle(float phase) {
 } // namespace
 
 LegAngles legCycle(float phase) {
-    return {cycle(phase) - .5f, 0};
+    return LegAngles{cycle(phase) - .5f, 0.f};
 }
 
 float walkCycle(float phase) {
-    auto step = .1f;
+    auto step = .01f;
 
-    for (size_t i = 0; i < 6; ++i) {
-        auto leg = legCycle(phase + static_cast<float>(i) / 6);
-        if (i > 3) {
-            leg.flip();
-        }
+    for (size_t i = 0; i < 3; ++i) {
+        auto leg1 = legCycle(phase + static_cast<float>(i) / 6.f);
+        auto leg2 = legCycle(phase + static_cast<float>(i) / 6.f + 1.f / 3.f);
 
-        servos::moveLeg(i, leg);
+        servos::moveLeg(i, 0, leg1);
+        servos::moveLeg(i, 1, leg2);
     }
 
-    usleep(100'000);
+    usleep(1000 * step);
 
     return phase + step;
 }
