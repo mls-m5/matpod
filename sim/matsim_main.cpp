@@ -39,7 +39,7 @@ void render(sdl::RendererView renderer) {
 
     for (int i = 0; i < 6; ++i) {
         auto angle = static_cast<float>(i) * pi2f / 6. + pi2f / 12.;
-        angle += instance.angles.at(i);
+        angle += -instance.angles.at(i);
         auto sx = std::sin(angle);
         auto sy = std::cos(angle);
 
@@ -69,14 +69,13 @@ int main(int argc, char *argv[]) {
         while (isRunning) {
             loop();
 
-            // Trigger redraw
-            auto refreshEvent = sdl::Event{.type = SDL_USEREVENT};
-            sdl::pushEvent(refreshEvent);
+            using namespace std::chrono_literals;
+            std::this_thread::sleep_for(10ms);
         }
     }};
 
     while (isRunning) {
-        if (auto o = sdl::pollEvent()) {
+        while (auto o = sdl::pollEvent()) {
             auto event = *o;
             if (event.type == SDL_QUIT) {
                 isRunning = false;

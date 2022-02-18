@@ -7,6 +7,8 @@ void setup() {
     servos::resetAngles();
 }
 
+auto cycle = Cycle1{};
+
 void loop() {
     static auto phase = 0.f;
 
@@ -15,6 +17,6 @@ void loop() {
         tests::program1();
         break;
     case 1:
-        phase = walkCycle(phase);
+        phase = cycle.update(phase);
     }
 }

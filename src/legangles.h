@@ -10,4 +10,9 @@ struct LegAngles {
     void flip() {
         hip = -hip;
     }
+
+    LegAngles &offset(float angle) {
+        hip += angle;
+        return *this;
+    }
 };
