@@ -7,7 +7,7 @@ add_executable(
     # Not servos.cpp
     ../src/testprograms.cpp
     matsim_main.cpp
-    servos_sim.cpp
+    servosim.cpp
     )
 
 target_include_directories(
@@ -15,4 +15,14 @@ target_include_directories(
     PRIVATE
     fakelibs
     ../src
+    lib/sdlpp/include
     )
+
+target_compile_features(matpod_sim PRIVATE cxx_std_17)
+
+find_package(Threads REQUIRED)
+target_link_libraries(matpod_sim PRIVATE Threads::Threads)
+
+find_package(SDL2 REQUIRED)
+include_directories(${SDL2_INCLUDE_DIRS})
+target_link_libraries(matpod_sim ${SDL2_LIBRARIES})
