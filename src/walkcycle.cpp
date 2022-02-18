@@ -67,6 +67,11 @@ void Cycle1::setOffsetPattern(int index) {
         _phaseOffset.at(4) = .5;
     }
     else if (index == 1) {
+        // _phaseOffset.at(0) = _phaseOffset.at(5) = 0;
+        _phaseOffset.at(1) = _phaseOffset.at(4) = 1.f / 3.f;
+        _phaseOffset.at(2) = _phaseOffset.at(3) = 2.f / 3.f;
+    }
+    else if (index == 2) {
         for (size_t i = 0; i < 3; ++i) {
             _phaseOffset.at(i) = static_cast<float>(i) / 6.f;
             _phaseOffset.at(i + 3) = static_cast<float>(i) / 6.f + 2.f / 3.f;
