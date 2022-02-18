@@ -93,7 +93,6 @@ int main(int argc, char *argv[]) {
                 auto &control = Control::instance();
                 control.x = x;
                 control.y = -y;
-                std::cout << "x " << x << ", " << y << std::endl;
             }
         }
 
