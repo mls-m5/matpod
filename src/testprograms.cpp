@@ -1,10 +1,10 @@
 #include "testprograms.h"
 #include "servos.h"
+#include <Arduino.h>
 
 namespace tests {
 
 void program1() {
-
     static auto dir = -.4f;
     static auto leg = 0;
     if (++leg >= 12) {
