@@ -35,12 +35,16 @@ void render(sdl::RendererView renderer) {
 
     drawCircle(renderer, {x, y}, 50);
 
+    auto &instance = ServoSim::instance();
+
     for (int i = 0; i < 6; ++i) {
         auto angle = static_cast<float>(i) * pi2f / 6. + pi2f / 12.;
-        angle += ServoSim::instance().angles.at(i);
+        angle += instance.angles.at(i);
         auto sx = std::sin(angle);
         auto sy = std::cos(angle);
-        renderer.drawLine(x + sx * 20, y + sy * 20, x + sx * 100, y + sy * 100);
+
+        auto l = 100. + 50 * std::cos(instance.angles.at(i + 6) - pif / 2.);
+        renderer.drawLine(x + sx * 40, y + sy * 40, x + sx * l, y + sy * l);
     }
 
     renderer.present();
