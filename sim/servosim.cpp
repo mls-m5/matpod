@@ -12,12 +12,6 @@ void setAngle(int i, float angle) {
     ServoSim::instance().targetAngles.at(i) = angle;
 }
 
-void resetAngles() {
-    for (size_t i = 0; i < 12; ++i) {
-        setAngle(i, 0);
-    }
-}
-
 } // namespace servos
 
 void ServoSim::update() {
