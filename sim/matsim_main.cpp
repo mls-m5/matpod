@@ -1,9 +1,11 @@
 #include "constants.h"
+#include "control.h"
 #include "sdlpp/events.hpp"
 #include "sdlpp/render.hpp"
 #include "sdlpp/window.hpp"
 #include "servosim.h"
 #include <cmath>
+#include <iostream>
 #include <thread>
 
 // Implemented by the actual program
@@ -80,6 +82,18 @@ int main(int argc, char *argv[]) {
             if (event.type == SDL_QUIT) {
                 isRunning = false;
                 break;
+            }
+            if (event.type == SDL_MOUSEMOTION) {
+                auto x =
+                    static_cast<float>(event.motion.x) / screenRect.w * 2.f -
+                    1.f;
+                auto y =
+                    static_cast<float>(event.motion.y) / screenRect.h * 2.f -
+                    1.f;
+                auto &control = Control::instance();
+                control.x = x;
+                control.y = -y;
+                std::cout << "x " << x << ", " << y << std::endl;
             }
         }
 

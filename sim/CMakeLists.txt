@@ -7,6 +7,7 @@ add_executable(
     # Not servos.cpp
     ../src/testprograms.cpp
     ../src/walkcycle.cpp
+    ../src/control.cpp
     matsim_main.cpp
     servosim.cpp
     )

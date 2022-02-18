@@ -1,3 +1,4 @@
+#include "control.h"
 #include "servos.h"
 #include "testprograms.h"
 #include "walkcycle.h"
@@ -17,6 +18,9 @@ void loop() {
         tests::program1();
         break;
     case 1:
+        auto &control = Control::instance();
+        cycle.turnAmount(control.x);
+        cycle.walkAmount(control.y);
         phase = cycle.update(phase);
     }
 }

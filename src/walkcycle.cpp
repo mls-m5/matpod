@@ -52,8 +52,8 @@ float Cycle1::legDirectionScale(int index, int side) {
         ret -= _turnAmount;
     }
 
-    auto invScale = _walkAmount + _turnAmount;
-    invScale = std::min(1.f, invScale);
+    auto invScale = std::abs(_walkAmount) + std::abs(_turnAmount);
+    invScale = std::max(1.f, invScale);
 
     return ret / invScale;
 }
