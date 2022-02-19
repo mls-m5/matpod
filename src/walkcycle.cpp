@@ -14,18 +14,24 @@ float zeroMiddle(float value) {
     return value - .5f;
 }
 
+unsigned long lastTime = 0;
+
 } // namespace
 
 LegAngles Cycle1::legCycle(float phase) {
     phase = cycle(phase);
 
+    constexpr float legBottomAngle = -1.f;
+    constexpr float stepHeight = .8f;
+
     if (phase < _ratio) {
-        return LegAngles{zeroMiddle(phase / _ratio) * _stepLen, -1.f};
+        return LegAngles{zeroMiddle(phase / _ratio) * _stepLen, legBottomAngle};
     }
     else {
         auto invRatio = 1. - _ratio;
-        return LegAngles{
-            zeroMiddle((1.f - (phase - _ratio) / invRatio)) * _stepLen, -.2f};
+        return LegAngles{zeroMiddle((1.f - (phase - _ratio) / invRatio)) *
+                             _stepLen,
+                         legBottomAngle + stepHeight * _stepHeightAmount};
     }
 }
 
@@ -63,7 +69,16 @@ Cycle1::Cycle1() {
 }
 
 float Cycle1::update(float phase) {
-    auto step = .01f;
+    if (lastTime == 0) {
+        lastTime = millis();
+    }
+
+    auto now = millis();
+    auto diff = now - lastTime;
+
+    auto step = diff / 10.f * .01f * _speed;
+
+    phase += step;
 
     for (size_t i = 0; i < 6; ++i) {
         auto leg = legCycle(phase + _phaseOffset.at(i));
@@ -73,9 +88,9 @@ float Cycle1::update(float phase) {
         servos::moveLeg(index, side, leg.offset(legOffset(index)));
     }
 
-    usleep(1000 * step);
+    lastTime = now;
 
-    return phase + step;
+    return phase;
 }
 
 void Cycle1::offsetPattern(int index) {
@@ -101,10 +116,32 @@ void Cycle1::offsetPattern(int index) {
     }
 }
 
-void Cycle1::walkAmount(float value) {
-    _walkAmount = clamp(value, -1.f, 1.f);
-}
+void Cycle1::applyControls(Control control) {
+    float prescale = 3;
+    control.x = clamp(control.x, -1.f, 1.f);
+    control.y = clamp(control.y, -1.f, 1.f);
 
-void Cycle1::turnAmount(float value) {
-    _turnAmount = clamp(value, -1.f, 1.f);
+    auto x = control.x * prescale;
+    auto y = control.y * prescale;
+
+    auto len = std::abs(x) + std::abs(y);
+
+    auto downScale = 1.f;
+
+    _stepHeightAmount = 1;
+
+    if (len < .1) {
+        _speed = 0;
+        _stepHeightAmount = 0;
+    }
+    else if (len > 1.f) {
+        downScale = 1. / len;
+        _speed = std::max(std::abs(x), std::abs(y));
+    }
+    else {
+        _speed = 1;
+    }
+
+    _turnAmount = x * downScale;
+    _walkAmount = y * downScale;
 }

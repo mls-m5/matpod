@@ -10,10 +10,11 @@ add_executable(
     ../src/testprograms.cpp
     ../src/walkcycle.cpp
     ../src/control.cpp
-    ../src/commandparser.cpp
     matsim_main.cpp
     servosim.cpp
     serversim.cpp
+    ledsim.cpp
+    wifisim.cpp
     )
 
 target_include_directories(

@@ -32,15 +32,12 @@ void loop() {
         break;
     case 1:
         auto demoControls = false;
+        auto &control = Control::instance();
         if (demoControls) {
-            cycle.walkAmount(1);
-            cycle.turnAmount(std::sin(phase / 5.));
+            control.x = std::sin(phase / 5.);
+            control.y = 1;
         }
-        else {
-            auto &control = Control::instance();
-            cycle.turnAmount(control.x);
-            cycle.walkAmount(control.y);
-        }
+        cycle.applyControls(control);
         phase = cycle.update(phase);
     }
 }

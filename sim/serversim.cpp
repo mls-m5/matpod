@@ -49,6 +49,9 @@ void init() {
     thread.detach();
 }
 
+void handle() {
+}
+
 } // namespace server
 
 void serversim::stop() {

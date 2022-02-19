@@ -1,5 +1,6 @@
 #pragma once
 
+#include "control.h"
 #include "legangles.h"
 #include <array>
 
@@ -8,8 +9,8 @@ struct Cycle1 {
     float update(float phase);
 
     void offsetPattern(int index);
-    void walkAmount(float value);
-    void turnAmount(float value);
+
+    void applyControls(Control control);
 
 private:
     LegAngles legCycle(float phase);
@@ -26,4 +27,6 @@ private:
 
     float _walkAmount = 1;
     float _turnAmount = 0;
+    float _speed = 1;
+    float _stepHeightAmount = 1;
 };
