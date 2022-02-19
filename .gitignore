@@ -2,6 +2,7 @@
 
 build/
 
+matpod_config.h
 
 # qtcreator project files
 *.cflags

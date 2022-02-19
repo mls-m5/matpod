@@ -1,0 +1,5 @@
+#pragma once
+
+constexpr bool wifiEnabled = true;
+constexpr auto ssid = "REPLACE_WITH_YOUR_SSID";
+constexpr auto password = "REPLACE_WITH_YOUR_PASSWORD";

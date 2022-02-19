@@ -1,4 +1,6 @@
 
+cmake_minimum_required(VERSION 3.22)
+
 project(sim)
 
 add_executable(
@@ -8,8 +10,10 @@ add_executable(
     ../src/testprograms.cpp
     ../src/walkcycle.cpp
     ../src/control.cpp
+    ../src/commandparser.cpp
     matsim_main.cpp
     servosim.cpp
+    serversim.cpp
     )
 
 target_include_directories(
@@ -18,13 +22,18 @@ target_include_directories(
     fakelibs
     ../src
     lib/sdlpp/include
+    lib/crow/include
     )
 
 target_compile_features(matpod_sim PRIVATE cxx_std_17)
 
 find_package(Threads REQUIRED)
-target_link_libraries(matpod_sim PRIVATE Threads::Threads)
 
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
-target_link_libraries(matpod_sim ${SDL2_LIBRARIES})
+target_link_libraries(
+    matpod_sim
+    PRIVATE
+    Threads::Threads
+    ${SDL2_LIBRARIES}
+    )

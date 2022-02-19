@@ -13,6 +13,8 @@ https://platformio.org/install
 
 cd into directory
 
+copy `matpod_config.h.orig` to `matpod_config.h` and set your wifi configurations
+
 ```bash
 platformio run
 ```

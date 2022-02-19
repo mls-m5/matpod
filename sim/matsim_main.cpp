@@ -3,6 +3,7 @@
 #include "sdlpp/events.hpp"
 #include "sdlpp/render.hpp"
 #include "sdlpp/window.hpp"
+#include "serversim.h"
 #include "servosim.h"
 #include <cmath>
 #include <iostream>
@@ -102,6 +103,8 @@ int main(int argc, char *argv[]) {
     }
 
     thread.join();
+
+    serversim::stop();
 
     return 0;
 }

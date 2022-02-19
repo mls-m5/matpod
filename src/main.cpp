@@ -1,4 +1,5 @@
 #include "control.h"
+#include "server.h"
 #include "servos.h"
 #include "testprograms.h"
 #include "walkcycle.h"
@@ -8,6 +9,7 @@
 void setup() {
     servos::resetDriver();
     servos::resetAngles();
+    server::init();
 }
 
 auto cycle = Cycle1{};

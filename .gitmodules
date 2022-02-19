@@ -1,3 +1,6 @@
 [submodule "sim/lib/sdlpp"]
 	path = sim/lib/sdlpp
 	url = https://github.com/mls-m5/sdlpp
+[submodule "sim/lib/crow"]
+	path = sim/lib/crow
+	url = https://github.com/CrowCpp/crow
