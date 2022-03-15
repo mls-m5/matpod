@@ -1,4 +1,5 @@
 #include "control.h"
+#include "idlecycle.h"
 #include "led.h"
 #include "server.h"
 #include "servos.h"
@@ -6,7 +7,6 @@
 #include "walkcycle.h"
 #include "wifi.h"
 #include <Arduino.h>
-
 #include <cmath>
 
 void setup() {
@@ -20,8 +20,6 @@ void setup() {
 }
 
 namespace {
-
-auto cycle = Cycle1{};
 
 unsigned long lastTime = 0;
 
@@ -38,6 +36,16 @@ float calculateStep() {
     return diff / 1000.f;
 }
 
+void demoControlsCycle(float step) {
+    auto &control = Control::instance();
+    static float phase = 0.;
+    control.x = std::sin(phase / 5.);
+    control.y = 1;
+}
+
+auto cycle = Cycle1{};
+auto idleCycle = IdleCycle{};
+
 } // namespace
 
 void loop() {
@@ -45,23 +53,34 @@ void loop() {
 
     auto step = calculateStep();
 
-    switch (1) {
+    static int state = 1;
+
+    bool enableIdleAnimation = false;
+
+    auto &control = Control::instance();
+
+    switch (state) {
     case 0:
         tests::program1();
         break;
     case 1: {
         auto demoControls = false;
-        auto &control = Control::instance();
-        static float phase = 0.;
         if (demoControls) {
-            control.x = std::sin(phase / 5.);
-            control.y = 1;
+            demoControlsCycle(step);
         }
         cycle.applyControls(control);
         cycle.update(step);
+
+        if (enableIdleAnimation && !control.isActive()) {
+            state = 2;
+        }
         break;
     }
     case 2:
+        idleCycle.update(step);
+        if (control.isActive()) {
+            state = 1;
+        }
 
         break;
     }

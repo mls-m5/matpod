@@ -8,7 +8,7 @@ struct Cycle1 {
     Cycle1();
 
     // Update and return new phase
-    float update(double step);
+    void update(double step);
 
     void applyControls(Control control);
 

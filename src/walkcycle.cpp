@@ -1,5 +1,6 @@
 #include "walkcycle.h"
 #include "servos.h"
+#include "sharedvalues.h"
 #include "utils.h"
 #include <Arduino.h>
 #include <cmath>
@@ -18,18 +19,17 @@ float zeroMiddle(float value) {
 
 LegAngles Cycle1::legCycle(float phase) {
     phase = cycle(phase);
-
-    constexpr float legBottomAngle = -1.f;
-    constexpr float stepHeight = .8f;
+    auto &values = sharedValues();
 
     if (phase < _ratio) {
-        return LegAngles{zeroMiddle(phase / _ratio) * _stepLen, legBottomAngle};
+        return LegAngles{zeroMiddle(phase / _ratio) * _stepLen,
+                         values.legBottomAngle};
     }
     else {
         auto invRatio = 1. - _ratio;
-        return LegAngles{zeroMiddle((1.f - (phase - _ratio) / invRatio)) *
-                             _stepLen,
-                         legBottomAngle + stepHeight * _stepHeightAmount};
+        return LegAngles{
+            zeroMiddle((1.f - (phase - _ratio) / invRatio)) * _stepLen,
+            values.legBottomAngle + values.stepHeight * _stepHeightAmount};
     }
 }
 
@@ -66,7 +66,7 @@ Cycle1::Cycle1() {
     offsetPattern(0);
 }
 
-float Cycle1::update(double step) {
+void Cycle1::update(double step) {
     phase += step / 10.f * .01f * _speed * 1000.f;
 
     for (size_t i = 0; i < 6; ++i) {
@@ -76,8 +76,6 @@ float Cycle1::update(double step) {
         leg.hip *= legDirectionScale(index, side);
         servos::moveLeg(index, side, leg.offset(legOffset(index)));
     }
-
-    return phase;
 }
 
 void Cycle1::offsetPattern(int index) {

@@ -10,6 +10,8 @@ add_executable(
     ../src/testprograms.cpp
     ../src/walkcycle.cpp
     ../src/control.cpp
+    ../src/sharedvalues.cpp
+    ../src/idlecycle.cpp
     matsim_main.cpp
     servosim.cpp
     serversim.cpp
