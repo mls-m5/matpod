@@ -19,25 +19,50 @@ void setup() {
     server::init();
 }
 
+namespace {
+
 auto cycle = Cycle1{};
+
+unsigned long lastTime = 0;
+
+float calculateStep() {
+    if (lastTime == 0) {
+        lastTime = millis();
+    }
+
+    auto now = millis();
+    auto diff = now - lastTime;
+
+    lastTime = now;
+
+    return diff / 1000.f;
+}
+
+} // namespace
 
 void loop() {
     server::handle();
 
-    static auto phase = 0.f;
+    auto step = calculateStep();
 
     switch (1) {
     case 0:
         tests::program1();
         break;
-    case 1:
+    case 1: {
         auto demoControls = false;
         auto &control = Control::instance();
+        static float phase = 0.;
         if (demoControls) {
             control.x = std::sin(phase / 5.);
             control.y = 1;
         }
         cycle.applyControls(control);
-        phase = cycle.update(phase);
+        cycle.update(step);
+        break;
+    }
+    case 2:
+
+        break;
     }
 }

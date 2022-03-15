@@ -14,8 +14,6 @@ float zeroMiddle(float value) {
     return value - .5f;
 }
 
-unsigned long lastTime = 0;
-
 } // namespace
 
 LegAngles Cycle1::legCycle(float phase) {
@@ -68,17 +66,8 @@ Cycle1::Cycle1() {
     offsetPattern(0);
 }
 
-float Cycle1::update(float phase) {
-    if (lastTime == 0) {
-        lastTime = millis();
-    }
-
-    auto now = millis();
-    auto diff = now - lastTime;
-
-    auto step = diff / 10.f * .01f * _speed;
-
-    phase += step;
+float Cycle1::update(double step) {
+    phase += step / 10.f * .01f * _speed * 1000.f;
 
     for (size_t i = 0; i < 6; ++i) {
         auto leg = legCycle(phase + _phaseOffset.at(i));
@@ -87,8 +76,6 @@ float Cycle1::update(float phase) {
         leg.hip *= legDirectionScale(index, side);
         servos::moveLeg(index, side, leg.offset(legOffset(index)));
     }
-
-    lastTime = now;
 
     return phase;
 }

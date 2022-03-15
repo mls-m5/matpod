@@ -6,14 +6,16 @@
 
 struct Cycle1 {
     Cycle1();
-    float update(float phase);
 
-    void offsetPattern(int index);
+    // Update and return new phase
+    float update(double step);
 
     void applyControls(Control control);
 
 private:
     LegAngles legCycle(float phase);
+
+    void offsetPattern(int index);
     float legOffset(int index);
     float phaseOffset(int index, int side);
 
@@ -29,4 +31,6 @@ private:
     float _turnAmount = 0;
     float _speed = 1;
     float _stepHeightAmount = 1;
+
+    double phase = 0.f;
 };
