@@ -22,4 +22,12 @@ void flash() {
     }
 }
 
+void blink() {
+    digitalWrite(LED_BUILTIN, LOW);
+    usleep(100000);
+    digitalWrite(LED_BUILTIN, HIGH);
+    usleep(100000);
+    digitalWrite(LED_BUILTIN, LOW);
+}
+
 } // namespace led

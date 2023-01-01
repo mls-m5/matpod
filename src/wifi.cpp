@@ -3,7 +3,9 @@
 #include "led.h"
 #include <WiFi.h>
 
-void wifi::connect() {
+namespace wifi {
+
+void connect() {
     if (!enabled) {
         return;
     }
@@ -16,6 +18,7 @@ void wifi::connect() {
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
         Serial.print(".");
+        led::blink();
     }
 
     led::flash();
@@ -23,4 +26,12 @@ void wifi::connect() {
     Serial.println("WiFi connected");
     Serial.println("IP address: ");
     Serial.println(WiFi.localIP());
+}
+
+void check() {
+    if (WiFi.status() != WL_CONNECTED) {
+        connect();
+    }
+}
+
 }

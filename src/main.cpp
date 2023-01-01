@@ -4,19 +4,38 @@
 #include "server.h"
 #include "servos.h"
 #include "testprograms.h"
+#include "udp.h"
 #include "walkcycle.h"
 #include "wifi.h"
 #include <Arduino.h>
 #include <cmath>
+
+namespace {
+
+enum class ServerType {
+    Web,
+    Udp,
+};
+
+ServerType serverType = ServerType::Udp;
+
+} // namespace
 
 void setup() {
     led::init();
 
     wifi::connect();
 
+    Serial.println("trying to init servos");
     servos::resetDriver();
     servos::resetAngles();
-    server::init();
+
+    if (serverType == ServerType::Web) {
+        server::init();
+    }
+    else {
+        udp::init();
+    }
 }
 
 namespace {
@@ -49,7 +68,14 @@ auto idleCycle = IdleCycle{};
 } // namespace
 
 void loop() {
-    server::handle();
+    wifi::check();
+
+    if (serverType == ServerType::Web) {
+        server::handle();
+    }
+    else {
+        // udp...
+    }
 
     auto step = calculateStep();
 
