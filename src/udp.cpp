@@ -27,7 +27,7 @@ void init() {
             size = packet.readBytesUntil('\n', buffer, 30);
             auto y = atof(buffer);
 
-            Control::instance().x = x;
+            Control::instance().turn = x;
             Control::instance().y = y;
 
             Serial.println("receive package");
@@ -44,12 +44,12 @@ void init() {
                 return;
             }
 
-            Control::instance().x = payload.faxis(0);
-            Control::instance().y = payload.faxis(3);
+            Control::instance().turn = payload.faxis(2);
+            Control::instance().y = payload.faxis(1);
             // Serial.println("receive logic is disabled");
 
             Serial.println("receive package");
-            Serial.println(Control::instance().x);
+            Serial.println(Control::instance().turn);
             Serial.println(Control::instance().y);
         }
     });

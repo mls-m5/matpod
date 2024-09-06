@@ -21,7 +21,7 @@ void parse(std::string str) {
     eq = str.find("=", eq + 1);
     auto y = str.substr(eq + 1);
 
-    Control::instance().x = std::stof(x);
+    Control::instance().turn = std::stof(x);
     Control::instance().y = std::stof(y);
 }
 

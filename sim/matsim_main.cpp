@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
                     static_cast<float>(event.motion.y) / screenRect.h * 2.f -
                     1.f;
                 auto &control = Control::instance();
-                control.x = x;
+                control.turn = x;
                 control.y = -y;
             }
         }

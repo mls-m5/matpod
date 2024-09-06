@@ -22,7 +22,7 @@ void init() {
         response += " y= ";
         response += y;
         server.send(200, "text", response);
-        Control::instance().x = x.toFloat();
+        Control::instance().turn = x.toFloat();
         Control::instance().y = y.toFloat();
         // led::flash();
     });

@@ -103,10 +103,10 @@ void Cycle1::offsetPattern(int index) {
 
 void Cycle1::applyControls(Control control) {
     float prescale = 3;
-    control.x = clamp(control.x, -1.f, 1.f);
+    control.turn = clamp(control.turn, -1.f, 1.f);
     control.y = clamp(control.y, -1.f, 1.f);
 
-    auto x = control.x * prescale;
+    auto x = control.turn * prescale;
     auto y = control.y * prescale;
 
     auto len = std::abs(x) + std::abs(y);

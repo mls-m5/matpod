@@ -62,7 +62,7 @@ float calculateStep() {
 void demoControlsCycle(float step) {
     auto &control = Control::instance();
     static float phase = 0.;
-    control.x = std::sin(phase / 5.);
+    control.turn = std::sin(phase / 5.);
     control.y = 1;
 }
 
