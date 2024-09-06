@@ -22,6 +22,7 @@ ServerType serverType = ServerType::Udp;
 } // namespace
 
 void setup() {
+    Serial.begin(9600);
     led::init();
 
     wifi::connect();
@@ -69,6 +70,7 @@ auto idleCycle = IdleCycle{};
 
 void loop() {
     wifi::check();
+    udp::handleSubscribe();
 
     if (serverType == ServerType::Web) {
         server::handle();

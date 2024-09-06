@@ -14,3 +14,5 @@ matpod_config.h
 *.includes
 
 .vscode
+.qtc_clangd/
+.pio

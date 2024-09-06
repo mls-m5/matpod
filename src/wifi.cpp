@@ -34,4 +34,4 @@ void check() {
     }
 }
 
-}
+} // namespace wifi
