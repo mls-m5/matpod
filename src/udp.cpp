@@ -45,6 +45,7 @@ void init() {
             }
 
             Control::instance().turn = payload.faxis(2);
+            Control::instance().x = payload.faxis(0);
             Control::instance().y = payload.faxis(1);
             // Serial.println("receive logic is disabled");
 

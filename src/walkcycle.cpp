@@ -74,7 +74,8 @@ void Cycle1::update(double step) {
         auto index = i % 3;
         auto side = i >= 3;
         leg.hip *= legDirectionScale(index, side);
-        servos::moveLeg(index, side, leg.offset(legOffset(index)));
+        servos::moveLeg(
+            index, side, leg.offset(legOffset(index)), _directionOffset);
     }
 }
 
@@ -106,10 +107,13 @@ void Cycle1::applyControls(Control control) {
     control.turn = clamp(control.turn, -1.f, 1.f);
     control.y = clamp(control.y, -1.f, 1.f);
 
-    auto x = control.turn * prescale;
+    auto turn = control.turn * prescale;
+    auto x = control.x * prescale;
     auto y = control.y * prescale;
 
-    auto len = std::abs(x) + std::abs(y);
+    auto magnitude = std::sqrt(x * x + y * y);
+    magnitude = std::min<float>(1, magnitude);
+    auto len = std::abs(turn) + std::abs(magnitude);
 
     auto downScale = 1.f;
 
@@ -121,12 +125,15 @@ void Cycle1::applyControls(Control control) {
     }
     else if (len > 1.f) {
         downScale = 1. / len;
-        _speed = std::max(std::abs(x), std::abs(y));
+        _speed = std::max(std::abs(turn), std::abs(magnitude));
     }
     else {
         _speed = 1;
     }
 
-    _turnAmount = x * downScale;
-    _walkAmount = y * downScale;
+    _turnAmount = turn * downScale;
+    _walkAmount = magnitude * downScale;
+
+    _directionOffset =
+        (static_cast<int>((std::atan2(x, y) / M_PI + 1) * 3)) % 3;
 }

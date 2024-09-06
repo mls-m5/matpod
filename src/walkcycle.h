@@ -32,5 +32,7 @@ private:
     float _speed = 1;
     float _stepHeightAmount = 1;
 
+    int _directionOffset = 0;
+
     double phase = 0.f;
 };

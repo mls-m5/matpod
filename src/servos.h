@@ -14,18 +14,19 @@ inline void resetAngles() {
     }
 }
 
-inline void moveLeg(int i, LegAngles angles) {
-    setAngle(i, angles.hip);
-    setAngle(i + 6, angles.knee);
+inline void moveLeg(int i, LegAngles angles, int indexOffset) {
+    setAngle((i + indexOffset) % 6, angles.hip);
+    setAngle((i + indexOffset) % 6 + 6, angles.knee);
 }
 
-inline void moveLeg(int i, int side, LegAngles angles) {
+/// Offset is if the hexapod should move in some other direction
+inline void moveLeg(int i, int side, LegAngles angles, int indexOffset) {
     if (side == 0) {
-        moveLeg(i, angles);
+        moveLeg(i, angles, indexOffset);
     }
     else {
         angles.flip();
-        moveLeg(5 - i, angles);
+        moveLeg(5 - i, angles, indexOffset);
     }
 }
 

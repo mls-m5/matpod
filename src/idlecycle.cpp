@@ -8,7 +8,8 @@ void IdleCycle::update(float step) {
     for (int i = 0; i < 6; ++i) {
         servos::moveLeg(
             i,
-            {static_cast<float>(std::sin(phase)) * .2f, values.legBottomAngle});
+            {static_cast<float>(std::sin(phase)) * .2f, values.legBottomAngle},
+            0);
     }
     phase += step;
 }
