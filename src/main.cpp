@@ -37,6 +37,9 @@ void setup() {
     else {
         udp::init();
     }
+
+    // Testing to disable whatchdog it seems to trigger otherwise
+    // esp_task_wdt_deinit(); // Disable the watchdog
 }
 
 namespace {

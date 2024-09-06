@@ -2,7 +2,9 @@
 #include "../matpod_config.h"
 #include "AsyncUDP.h"
 #include "control.h"
+#include "payload.h"
 #include <Arduino.h>
+#include <cstdint>
 
 namespace udp {
 
@@ -17,7 +19,7 @@ void init() {
     udp.listen(8088);
 
     udp.onPacket([](AsyncUDPPacket packet) {
-        if (wifi::controllerType == wifi::HeliController) {
+        if (wifi::controllerType == wifi::OldController) {
             char buffer[30];
             auto size = packet.readBytesUntil('\n', buffer, 30);
             auto x = atof(buffer);
@@ -33,7 +35,22 @@ void init() {
             Serial.println(y);
         }
         else {
-#error "continue here"
+            auto maxLen = sizeof(Payload);
+            auto payload = Payload{};
+            auto len =
+                packet.read(reinterpret_cast<uint8_t *>(&payload), maxLen);
+            if (len < maxLen) {
+                Serial.println("invalid packet, to short");
+                return;
+            }
+
+            Control::instance().x = payload.faxis(0);
+            Control::instance().y = payload.faxis(3);
+            // Serial.println("receive logic is disabled");
+
+            Serial.println("receive package");
+            Serial.println(Control::instance().x);
+            Serial.println(Control::instance().y);
         }
     });
 }
@@ -45,7 +62,7 @@ void handleSubscribe() {
         if (currentMillis - previousMillis >= interval) {
             previousMillis = currentMillis;
 
-            if (udp.connect(IPAddress(192, 168, 4, 1), 8088)) {
+            if (udp.connect(IPAddress(192, 168, 4, 1), 30)) {
                 udp.print("subscribe 8088");
                 Serial.println("Sent subscribe 8088 to 192.168.4.1");
             }
