@@ -106,20 +106,22 @@ void Cycle1::applyControls(Control control) {
     float prescale = 3;
     control.turn = clamp(control.turn, -1.f, 1.f);
     control.y = clamp(control.y, -1.f, 1.f);
+    control.x = clamp(control.x, -1.f, 1.f);
 
     auto turn = control.turn * prescale;
-    auto x = control.x * prescale;
-    auto y = control.y * prescale;
-
+    float x = control.x;
+    float y = control.y;
     auto magnitude = std::sqrt(x * x + y * y);
     magnitude = std::min<float>(1, magnitude);
+    magnitude *= prescale;
+
     auto len = std::abs(turn) + std::abs(magnitude);
 
     auto downScale = 1.f;
 
     _stepHeightAmount = 1;
 
-    if (len < .1) {
+    if (len < .2) {
         _speed = 0;
         _stepHeightAmount = 0;
     }
@@ -134,6 +136,10 @@ void Cycle1::applyControls(Control control) {
     _turnAmount = turn * downScale;
     _walkAmount = magnitude * downScale;
 
-    _directionOffset =
-        (static_cast<int>((std::atan2(x, y) / M_PI + 1) * 3)) % 3;
+    auto directionNumber =
+        static_cast<int>((std::atan2(x, y) / M_PI + 1) * 3.f);
+    if (directionNumber > 3) {
+        _walkAmount *= -1.f;
+    }
+    _directionOffset = (directionNumber) % 3;
 }
